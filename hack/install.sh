@@ -28,6 +28,8 @@ apt_url="https://apt.dockerproject.org"
 yum_url="https://yum.dockerproject.org"
 gpg_fingerprint="58118E89F3A912897C070ADBF76221572C52609D"
 
+docker_version="1.10.3"
+
 key_servers="
 ha.pool.sks-keyservers.net
 pgp.mit.edu
@@ -429,7 +431,7 @@ do_install() {
 			$sh_c "apt-key adv -k ${gpg_fingerprint} >/dev/null"
 			$sh_c "mkdir -p /etc/apt/sources.list.d"
 			$sh_c "echo deb [arch=$(dpkg --print-architecture)] ${apt_url}/repo ${lsb_dist}-${dist_version} ${repo} > /etc/apt/sources.list.d/docker.list"
-			$sh_c 'sleep 3; apt-get update; apt-get install -y -q docker-engine'
+			$sh_c 'sleep 3; apt-get update; apt-get install -y -q docker-engine=${docker_version}'
 			)
 			echo_docker_as_nonroot
 			exit 0
@@ -447,12 +449,12 @@ do_install() {
 			if [ "$lsb_dist" = "fedora" ] && [ "$dist_version" -ge "22" ]; then
 				(
 					set -x
-					$sh_c 'sleep 3; dnf -y -q install docker-engine'
+					$sh_c 'sleep 3; dnf -y -q install docker-engine=${docker_version}'
 				)
 			else
 				(
 					set -x
-					$sh_c 'sleep 3; yum -y -q install docker-engine'
+					$sh_c 'sleep 3; yum -y -q install docker-engine=${docker_version}'
 				)
 			fi
 			echo_docker_as_nonroot
